@@ -7,16 +7,11 @@
     
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Share Tech Mono', monospace;
@@ -31,13 +26,10 @@
             background: #0a0000;
         }
 
-        /* BACKGROUND IMAGE WITH RED TINT */
         .bg-image {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background-image: url('https://i.ibb.co/xK4nDYsM/bg.jpg');
             background-size: cover;
             background-position: center;
@@ -48,13 +40,10 @@
             transform: scale(1.05);
         }
 
-        /* RED OVERLAY */
         .bg-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: 
                 radial-gradient(circle at center, rgba(255,0,0,0.1) 0%, rgba(0,0,0,0.9) 100%),
                 linear-gradient(0deg, rgba(255,0,0,0.05) 50%, transparent 50%);
@@ -68,13 +57,10 @@
             100% { background-position: 0 100px; }
         }
 
-        /* GLITCH NOISE OVERLAY */
         .noise-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             z-index: -1;
             opacity: 0.03;
             background-image: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>');
@@ -89,7 +75,6 @@
             text-align: center;
         }
 
-        /* LOGO WITH RED GLOW */
         .logo-container {
             margin-bottom: 20px;
             position: relative;
@@ -97,8 +82,7 @@
         }
 
         .logo-img {
-            width: 100px;
-            height: 100px;
+            width: 100px; height: 100px;
             border-radius: 20px;
             object-fit: cover;
             border: 2px solid rgba(255, 0, 0, 0.6);
@@ -118,11 +102,7 @@
             98% { transform: translate(2px, 1px); }
         }
 
-        /* TITLE WITH GLITCH EFFECT */
-        .title-wrapper {
-            position: relative;
-            margin-bottom: 5px;
-        }
+        .title-wrapper { position: relative; margin-bottom: 5px; }
 
         .title {
             font-size: 2.5em;
@@ -145,14 +125,11 @@
             20%, 24%, 55% { opacity: 0.3; }
         }
 
-        .title::before,
-        .title::after {
+        .title::before, .title::after {
             content: 'AHSAN IMAGE HOSTING';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             opacity: 0;
         }
 
@@ -172,16 +149,12 @@
             0%, 100% { opacity: 0; transform: translate(0); }
             10% { opacity: 0.5; transform: translate(-3px, 2px); }
             20% { opacity: 0; transform: translate(0); }
-            30% { opacity: 0.3; transform: translate(3px, -1px); }
-            40% { opacity: 0; transform: translate(0); }
         }
 
         @keyframes glitch2 {
             0%, 100% { opacity: 0; transform: translate(0); }
             15% { opacity: 0.4; transform: translate(2px, -2px); }
             25% { opacity: 0; transform: translate(0); }
-            35% { opacity: 0.5; transform: translate(-2px, 1px); }
-            45% { opacity: 0; transform: translate(0); }
         }
 
         .subtitle {
@@ -193,7 +166,6 @@
             text-shadow: 0 0 10px rgba(255,0,0,0.5);
         }
 
-        /* UPLOAD ZONE */
         .upload-zone {
             border: 2px dashed rgba(255, 0, 0, 0.5);
             border-radius: 20px;
@@ -210,7 +182,6 @@
             border-color: #ff0000;
             background: rgba(255, 0, 0, 0.08);
             box-shadow: 0 0 40px rgba(255, 0, 0, 0.2);
-            transform: scale(1.02);
         }
 
         .upload-zone.drag-over {
@@ -243,7 +214,6 @@
             margin-top: 8px;
         }
 
-        /* AUTO DELETE SELECT */
         .delete-select {
             width: 100%;
             padding: 14px 20px;
@@ -260,17 +230,9 @@
             text-align: center;
         }
 
-        .delete-select option {
-            background: #1a0000;
-            color: #fff;
-        }
+        .delete-select option { background: #1a0000; color: #fff; }
+        .delete-select:focus { border-color: #ff0000; box-shadow: 0 0 20px rgba(255,0,0,0.3); }
 
-        .delete-select:focus {
-            border-color: #ff0000;
-            box-shadow: 0 0 20px rgba(255,0,0,0.3);
-        }
-
-        /* UPLOAD BUTTON */
         .btn {
             width: 100%;
             padding: 16px;
@@ -297,16 +259,10 @@
         .btn-upload:hover {
             transform: translateY(-3px);
             box-shadow: 0 0 50px rgba(255,0,0,0.6);
-            background: linear-gradient(45deg, #ff1111, #dd0000);
         }
 
-        .btn-upload:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .btn-upload:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-        /* PROGRESS BAR */
         .progress-bar {
             display: none;
             width: 100%;
@@ -326,16 +282,13 @@
             width: 0%;
         }
 
-        /* RESULT BOX */
         .result-area {
             display: none;
             margin-top: 20px;
             animation: fadeInUp 0.5s ease;
         }
 
-        .result-area.show {
-            display: block;
-        }
+        .result-area.show { display: block; }
 
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
@@ -360,9 +313,7 @@
             border-radius: 8px;
         }
 
-        .link-row:last-child {
-            margin-bottom: 0;
-        }
+        .link-row:last-child { margin-bottom: 0; }
 
         .link-label {
             font-size: 0.75em;
@@ -373,7 +324,7 @@
 
         .link-value {
             flex: 1;
-            font-size: 0.8em;
+            font-size: 0.75em;
             color: rgba(255,255,255,0.8);
             word-break: break-all;
             padding: 5px;
@@ -395,12 +346,8 @@
             white-space: nowrap;
         }
 
-        .btn-copy-link:hover {
-            background: rgba(255,0,0,0.6);
-            box-shadow: 0 0 15px rgba(255,0,0,0.4);
-        }
+        .btn-copy-link:hover { background: rgba(255,0,0,0.6); box-shadow: 0 0 15px rgba(255,0,0,0.4); }
 
-        /* IMAGE PREVIEW */
         .preview-img {
             max-width: 100%;
             max-height: 200px;
@@ -410,11 +357,9 @@
             box-shadow: 0 0 20px rgba(255,0,0,0.2);
         }
 
-        /* TOAST */
         .toast {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 20px; right: 20px;
             padding: 14px 24px;
             border-radius: 8px;
             color: #fff;
@@ -433,21 +378,9 @@
             to { transform: translateX(0); opacity: 1; }
         }
 
-        .toast-success { 
-            background: rgba(0,255,0,0.15); 
-            border-color: rgba(0,255,0,0.5);
-            box-shadow: 0 0 20px rgba(0,255,0,0.2);
-        }
-        .toast-error { 
-            background: rgba(255,0,0,0.15); 
-            border-color: rgba(255,0,0,0.5);
-            box-shadow: 0 0 20px rgba(255,0,0,0.2);
-        }
-        .toast-info { 
-            background: rgba(255,165,0,0.15); 
-            border-color: rgba(255,165,0,0.5);
-            box-shadow: 0 0 20px rgba(255,165,0,0.2);
-        }
+        .toast-success { background: rgba(0,255,0,0.15); border-color: rgba(0,255,0,0.5); }
+        .toast-error { background: rgba(255,0,0,0.15); border-color: rgba(255,0,0,0.5); }
+        .toast-info { background: rgba(255,165,0,0.15); border-color: rgba(255,165,0,0.5); }
 
         .footer-text {
             margin-top: 30px;
@@ -472,26 +405,22 @@
 
     <div class="main-content">
 
-        <!-- LOGO -->
         <div class="logo-container">
             <img src="https://i.ibb.co/vCfwJshm/logo.jpg" alt="Logo" class="logo-img" onerror="this.style.display='none'">
         </div>
 
-        <!-- TITLE -->
         <div class="title-wrapper">
             <h1 class="title">AHSAN IMAGE HOSTING</h1>
         </div>
         <p class="subtitle">Upload • Share • Delete</p>
 
-        <!-- UPLOAD ZONE -->
         <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
             <div class="upload-icon">📁</div>
             <div class="upload-text">DROP IMAGE HERE</div>
-            <div class="upload-hint">or click to browse • Max 10MB</div>
+            <div class="upload-hint">or click to browse • Max 1MB</div>
         </div>
         <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
 
-        <!-- AUTO DELETE -->
         <select class="delete-select" id="deleteTime">
             <option value="24h">⏰ Auto-Delete: 24 Hours</option>
             <option value="7d">📅 Auto-Delete: 7 Days</option>
@@ -499,17 +428,14 @@
             <option value="forever">♾️ Never Delete</option>
         </select>
 
-        <!-- UPLOAD BUTTON -->
         <button class="btn btn-upload" id="uploadBtn" onclick="uploadImage()" disabled>
             🚀 UPLOAD IMAGE
         </button>
 
-        <!-- PROGRESS -->
         <div class="progress-bar" id="progressBar">
             <div class="progress-fill" id="progressFill"></div>
         </div>
 
-        <!-- RESULT -->
         <div class="result-area" id="resultArea">
             <img class="preview-img" id="previewImg" src="" alt="Preview">
             <div class="result-links" id="resultLinks"></div>
@@ -521,25 +447,25 @@
     <div class="toast" id="toast"></div>
 
     <script>
-        // FIREBASE
         const firebaseConfig = {
-            databaseURL: "https://ahsan-url-shortener-default-rtdb.asia-southeast1.firebasedatabase.app/",
-            storageBucket: "ahsan-url-shortener.appspot.com"
+            databaseURL: "https://ahsan-url-shortener-default-rtdb.asia-southeast1.firebasedatabase.app/"
         };
         
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const storage = firebase.storage();
 
         let selectedFile = null;
         let currentImageUrl = '';
 
-        // FILE SELECT
         window.handleFileSelect = function(event) {
             const file = event.target.files[0];
             if (file) {
-                if (file.size > 10 * 1024 * 1024) {
-                    showToast('❌ File too large! Max 10MB', 'error');
+                if (file.size > 1 * 1024 * 1024) {
+                    showToast('❌ File too large! Max 1MB. Use smaller image.', 'error');
+                    return;
+                }
+                if (!file.type.startsWith('image/')) {
+                    showToast('❌ Only image files allowed!', 'error');
                     return;
                 }
                 selectedFile = file;
@@ -549,7 +475,15 @@
             }
         };
 
-        // UPLOAD IMAGE
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
         window.uploadImage = async function() {
             if (!selectedFile) return;
 
@@ -559,107 +493,118 @@
             const deleteTime = document.getElementById('deleteTime').value;
 
             btn.disabled = true;
-            btn.textContent = '⏳ UPLOADING...';
+            btn.textContent = '⏳ CONVERTING...';
             progressBar.style.display = 'block';
-            progressFill.style.width = '0%';
+            progressFill.style.width = '30%';
 
             try {
+                const base64 = await fileToBase64(selectedFile);
+                progressFill.style.width = '60%';
+                btn.textContent = '⏳ SAVING...';
+
                 const code = generateCode(8);
-                const storageRef = storage.ref('images/' + code + '_' + selectedFile.name);
                 
-                const uploadTask = storageRef.put(selectedFile);
+                let expiryDate = null;
+                const now = new Date();
+                if (deleteTime === '24h') expiryDate = new Date(now.getTime() + 24*60*60*1000).toISOString();
+                else if (deleteTime === '7d') expiryDate = new Date(now.getTime() + 7*24*60*60*1000).toISOString();
+                else if (deleteTime === '30d') expiryDate = new Date(now.getTime() + 30*24*60*60*1000).toISOString();
+
+                progressFill.style.width = '80%';
+
+                await db.ref('images/' + code).set({
+                    code: code,
+                    base64: base64,
+                    originalName: selectedFile.name,
+                    fileType: selectedFile.type,
+                    fileSize: selectedFile.size,
+                    uploadedAt: new Date().toISOString(),
+                    expiry: expiryDate,
+                    deleteTime: deleteTime,
+                    views: 0
+                });
+
+                progressFill.style.width = '100%';
+
+                const base = window.location.origin + window.location.pathname.replace('index.html', '');
+                const shortLink = base + '?i=' + code;
+                currentImageUrl = shortLink;
                 
-                uploadTask.on('state_changed',
-                    (snapshot) => {
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        progressFill.style.width = progress + '%';
-                    },
-                    (error) => {
-                        showToast('❌ Upload failed!', 'error');
-                        btn.disabled = false;
-                        btn.textContent = '🚀 UPLOAD IMAGE';
-                        progressBar.style.display = 'none';
-                    },
-                    async () => {
-                        const downloadUrl = await uploadTask.snapshot.ref.getDownloadURL();
-                        
-                        // Calculate expiry
-                        let expiryDate = null;
-                        const now = new Date();
-                        if (deleteTime === '24h') expiryDate = new Date(now.getTime() + 24*60*60*1000).toISOString();
-                        else if (deleteTime === '7d') expiryDate = new Date(now.getTime() + 7*24*60*60*1000).toISOString();
-                        else if (deleteTime === '30d') expiryDate = new Date(now.getTime() + 30*24*60*60*1000).toISOString();
-
-                        // Save to database
-                        await db.ref('images/' + code).set({
-                            code: code,
-                            url: downloadUrl,
-                            originalName: selectedFile.name,
-                            uploadedAt: new Date().toISOString(),
-                            expiry: expiryDate,
-                            deleteTime: deleteTime,
-                            views: 0
-                        });
-
-                        currentImageUrl = downloadUrl;
-                        
-                        // Show result
-                        displayResult(downloadUrl, code);
-                        
-                        btn.disabled = false;
-                        btn.textContent = '🚀 UPLOAD IMAGE';
-                        progressBar.style.display = 'none';
-                        selectedFile = null;
-                        document.getElementById('fileInput').value = '';
-                        document.getElementById('uploadZone').querySelector('.upload-text').textContent = 'DROP IMAGE HERE';
-                        document.getElementById('uploadZone').querySelector('.upload-icon').textContent = '📁';
-                        
-                        showToast('✅ Image uploaded! Links ready.', 'success');
-                    }
-                );
-            } catch (e) {
-                console.error(e);
-                showToast('❌ Upload error!', 'error');
+                displayResult(base64, shortLink, code);
+                
                 btn.disabled = false;
                 btn.textContent = '🚀 UPLOAD IMAGE';
                 progressBar.style.display = 'none';
+                progressFill.style.width = '0%';
+                selectedFile = null;
+                document.getElementById('fileInput').value = '';
+                document.getElementById('uploadZone').querySelector('.upload-text').textContent = 'DROP IMAGE HERE';
+                document.getElementById('uploadZone').querySelector('.upload-icon').textContent = '📁';
+                
+                showToast('✅ Image uploaded! Links ready.', 'success');
+            } catch (e) {
+                console.error(e);
+                showToast('❌ Upload error! Try smaller image.', 'error');
+                btn.disabled = false;
+                btn.textContent = '🚀 UPLOAD IMAGE';
+                progressBar.style.display = 'none';
+                progressFill.style.width = '0%';
             }
         };
 
-        // DISPLAY RESULT
-        function displayResult(url, code) {
-            const base = window.location.origin + window.location.pathname.replace('index.html', '');
-            const shortLink = base + '?i=' + code;
+        function displayResult(base64, shortLink, code) {
+            document.getElementById('previewImg').src = base64;
             
-            document.getElementById('previewImg').src = url;
+            const base = window.location.origin + window.location.pathname.replace('index.html', '');
+            const viewLink = base + '?i=' + code;
             
             document.getElementById('resultLinks').innerHTML = `
                 <div class="link-row">
-                    <span class="link-label">🔗 Direct</span>
-                    <span class="link-value">${url}</span>
-                    <button class="btn-copy-link" onclick="copyText('${url}')">COPY</button>
-                </div>
-                <div class="link-row">
-                    <span class="link-label">⚡ Short</span>
-                    <span class="link-value">${shortLink}</span>
-                    <button class="btn-copy-link" onclick="copyText('${shortLink}')">COPY</button>
+                    <span class="link-label">🔗 View</span>
+                    <span class="link-value">${viewLink}</span>
+                    <button class="btn-copy-link" onclick="copyText('${viewLink}')">COPY</button>
                 </div>
                 <div class="link-row">
                     <span class="link-label">🌐 HTML</span>
-                    <span class="link-value">&lt;img src="${url}"&gt;</span>
-                    <button class="btn-copy-link" onclick="copyText('&lt;img src=&quot;${url}&quot;&gt;')">COPY</button>
+                    <span class="link-value">&lt;img src="${viewLink}"&gt;</span>
+                    <button class="btn-copy-link" onclick="copyText('&lt;img src=&quot;${viewLink}&quot;&gt;')">COPY</button>
                 </div>
                 <div class="link-row">
                     <span class="link-label">📝 BBCode</span>
-                    <span class="link-value">[img]${url}[/img]</span>
-                    <button class="btn-copy-link" onclick="copyText('[img]${url}[/img]')">COPY</button>
+                    <span class="link-value">[img]${viewLink}[/img]</span>
+                    <button class="btn-copy-link" onclick="copyText('[img]${viewLink}[/img]')">COPY</button>
+                </div>
+                <div class="link-row">
+                    <span class="link-label">📋 Markdown</span>
+                    <span class="link-value">![](${viewLink})</span>
+                    <button class="btn-copy-link" onclick="copyText('![](${viewLink})')">COPY</button>
                 </div>
             `;
             
             document.getElementById('resultArea').classList.add('show');
         }
 
-        // COPY
+        async function handleImageView() {
+            const code = new URLSearchParams(window.location.search).get('i');
+            if (code) {
+                try {
+                    const snap = await db.ref('images/' + code).once('value');
+                    const data = snap.val();
+                    if (data?.base64) {
+                        await db.ref('images/' + code + '/views').set((data.views || 0) + 1);
+                        document.body.innerHTML = `
+                            <div style="display:flex;justify-content:center;align-items:center;min-height:100vh;background:#000;padding:20px;">
+                                <div style="text-align:center;">
+                                    <img src="${data.base64}" style="max-width:100%;max-height:90vh;border-radius:10px;box-shadow:0 0 50px rgba(255,0,0,0.3);">
+                                    <p style="color:#666;margin-top:10px;font-family:monospace;">📅 ${new Date(data.uploadedAt).toLocaleString()}</p>
+                                    <p style="color:#ff0000;font-family:monospace;">👁️ ${(data.views || 0) + 1} views</p>
+                                </div>
+                            </div>`;
+                    }
+                } catch (e) {}
+            }
+        }
+
         window.copyText = function(text) {
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(text).then(() => showToast('📋 Copied!', 'success'));
@@ -675,15 +620,12 @@
             }
         };
 
-        // DRAG & DROP
         const uploadZone = document.getElementById('uploadZone');
         uploadZone.addEventListener('dragover', (e) => {
             e.preventDefault();
             uploadZone.classList.add('drag-over');
         });
-        uploadZone.addEventListener('dragleave', () => {
-            uploadZone.classList.remove('drag-over');
-        });
+        uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
         uploadZone.addEventListener('drop', (e) => {
             e.preventDefault();
             uploadZone.classList.remove('drag-over');
@@ -694,7 +636,6 @@
             }
         });
 
-        // GENERATE CODE
         function generateCode(len) {
             const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             let code = '';
@@ -702,7 +643,6 @@
             return code;
         }
 
-        // TOAST
         function showToast(msg, type) {
             const t = document.getElementById('toast');
             t.textContent = msg;
@@ -712,7 +652,8 @@
             t.hide = setTimeout(() => t.style.display = 'none', 2500);
         }
 
-        console.log('🔥 AHSAN IMAGE HOSTING - GLITCH EDITION READY!');
+        handleImageView();
+        console.log('🔥 AHSAN IMAGE HOSTING - 1MB READY!');
     </script>
 </body>
 </html>
