@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AHSAN IMAGE HOSTING</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+            padding: 20px;
+            background: #0a0000;
+        }
+
+        /* BACKGROUND IMAGE WITH RED TINT */
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://i.ibb.co/xK4nDYsM/bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            z-index: -2;
+            filter: brightness(0.3) saturate(0.5);
+            transform: scale(1.05);
+        }
+
+        /* RED OVERLAY */
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at center, rgba(255,0,0,0.1) 0%, rgba(0,0,0,0.9) 100%),
+                linear-gradient(0deg, rgba(255,0,0,0.05) 50%, transparent 50%);
+            background-size: 100% 4px;
+            z-index: -1;
+            animation: scanlines 8s linear infinite;
+        }
+
+        @keyframes scanlines {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100px; }
+        }
+
+        /* GLITCH NOISE OVERLAY */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+            background-image: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>');
+            pointer-events: none;
+        }
+
+        .main-content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 650px;
+            text-align: center;
+        }
+
+        /* LOGO WITH RED GLOW */
+        .logo-container {
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .logo-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 20px;
+            object-fit: cover;
+            border: 2px solid rgba(255, 0, 0, 0.6);
+            box-shadow: 
+                0 0 30px rgba(255, 0, 0, 0.6),
+                0 0 60px rgba(255, 0, 0, 0.3),
+                0 0 100px rgba(255, 0, 0, 0.1),
+                inset 0 0 30px rgba(255, 0, 0, 0.1);
+            animation: logoGlitch 3s infinite;
+        }
+
+        @keyframes logoGlitch {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(-3px, 2px); }
+            94% { transform: translate(3px, -2px); }
+            96% { transform: translate(-2px, -1px); }
+            98% { transform: translate(2px, 1px); }
+        }
+
+        /* TITLE WITH GLITCH EFFECT */
+        .title-wrapper {
+            position: relative;
+            margin-bottom: 5px;
+        }
+
+        .title {
+            font-size: 2.5em;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            position: relative;
+            color: #ff0000;
+            text-shadow: 
+                0 0 10px rgba(255,0,0,0.8),
+                0 0 20px rgba(255,0,0,0.6),
+                0 0 40px rgba(255,0,0,0.4),
+                0 0 80px rgba(255,0,0,0.2),
+                2px 2px 0 #000;
+            animation: textFlicker 5s infinite;
+        }
+
+        @keyframes textFlicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+            20%, 24%, 55% { opacity: 0.3; }
+        }
+
+        .title::before,
+        .title::after {
+            content: 'AHSAN IMAGE HOSTING';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+        }
+
+        .title::before {
+            color: #0ff;
+            animation: glitch1 2s infinite;
+            z-index: -1;
+        }
+
+        .title::after {
+            color: #f0f;
+            animation: glitch2 2s infinite;
+            z-index: -2;
+        }
+
+        @keyframes glitch1 {
+            0%, 100% { opacity: 0; transform: translate(0); }
+            10% { opacity: 0.5; transform: translate(-3px, 2px); }
+            20% { opacity: 0; transform: translate(0); }
+            30% { opacity: 0.3; transform: translate(3px, -1px); }
+            40% { opacity: 0; transform: translate(0); }
+        }
+
+        @keyframes glitch2 {
+            0%, 100% { opacity: 0; transform: translate(0); }
+            15% { opacity: 0.4; transform: translate(2px, -2px); }
+            25% { opacity: 0; transform: translate(0); }
+            35% { opacity: 0.5; transform: translate(-2px, 1px); }
+            45% { opacity: 0; transform: translate(0); }
+        }
+
+        .subtitle {
+            color: rgba(255, 0, 0, 0.7);
+            font-size: 0.9em;
+            margin-bottom: 35px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255,0,0,0.5);
+        }
+
+        /* UPLOAD ZONE */
+        .upload-zone {
+            border: 2px dashed rgba(255, 0, 0, 0.5);
+            border-radius: 20px;
+            padding: 50px 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(255, 0, 0, 0.03);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .upload-zone:hover {
+            border-color: #ff0000;
+            background: rgba(255, 0, 0, 0.08);
+            box-shadow: 0 0 40px rgba(255, 0, 0, 0.2);
+            transform: scale(1.02);
+        }
+
+        .upload-zone.drag-over {
+            border-color: #ff0000;
+            background: rgba(255, 0, 0, 0.15);
+            box-shadow: 0 0 60px rgba(255, 0, 0, 0.4);
+        }
+
+        .upload-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            animation: float 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(255,0,0,0.6));
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .upload-text {
+            font-size: 1.1em;
+            color: rgba(255,255,255,0.8);
+            letter-spacing: 1px;
+        }
+
+        .upload-hint {
+            font-size: 0.75em;
+            color: rgba(255,0,0,0.5);
+            margin-top: 8px;
+        }
+
+        /* AUTO DELETE SELECT */
+        .delete-select {
+            width: 100%;
+            padding: 14px 20px;
+            background: rgba(255, 0, 0, 0.05);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 0.9em;
+            outline: none;
+            cursor: pointer;
+            font-family: 'Share Tech Mono', monospace;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .delete-select option {
+            background: #1a0000;
+            color: #fff;
+        }
+
+        .delete-select:focus {
+            border-color: #ff0000;
+            box-shadow: 0 0 20px rgba(255,0,0,0.3);
+        }
+
+        /* UPLOAD BUTTON */
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: all 0.3s;
+            font-family: 'Share Tech Mono', monospace;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-upload {
+            background: linear-gradient(45deg, #ff0000, #cc0000);
+            color: #fff;
+            box-shadow: 0 0 30px rgba(255,0,0,0.4);
+            border: 1px solid rgba(255,0,0,0.6);
+        }
+
+        .btn-upload:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 50px rgba(255,0,0,0.6);
+            background: linear-gradient(45deg, #ff1111, #dd0000);
+        }
+
+        .btn-upload:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* PROGRESS BAR */
+        .progress-bar {
+            display: none;
+            width: 100%;
+            height: 6px;
+            background: rgba(255,0,0,0.2);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0000, #ff4444);
+            border-radius: 10px;
+            transition: width 0.3s;
+            box-shadow: 0 0 10px rgba(255,0,0,0.6);
+            width: 0%;
+        }
+
+        /* RESULT BOX */
+        .result-area {
+            display: none;
+            margin-top: 20px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .result-area.show {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-links {
+            background: rgba(255,0,0,0.05);
+            border: 1px solid rgba(255,0,0,0.3);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .link-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+        }
+
+        .link-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .link-label {
+            font-size: 0.75em;
+            color: rgba(255,0,0,0.7);
+            min-width: 80px;
+            letter-spacing: 1px;
+        }
+
+        .link-value {
+            flex: 1;
+            font-size: 0.8em;
+            color: rgba(255,255,255,0.8);
+            word-break: break-all;
+            padding: 5px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 5px;
+        }
+
+        .btn-copy-link {
+            padding: 8px 15px;
+            background: rgba(255,0,0,0.3);
+            border: 1px solid rgba(255,0,0,0.5);
+            border-radius: 6px;
+            color: #fff;
+            cursor: pointer;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75em;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-copy-link:hover {
+            background: rgba(255,0,0,0.6);
+            box-shadow: 0 0 15px rgba(255,0,0,0.4);
+        }
+
+        /* IMAGE PREVIEW */
+        .preview-img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255,0,0,0.3);
+            box-shadow: 0 0 20px rgba(255,0,0,0.2);
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 14px 24px;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 600;
+            z-index: 9999;
+            animation: slideIn 0.4s ease;
+            display: none;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+            border: 1px solid;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .toast-success { 
+            background: rgba(0,255,0,0.15); 
+            border-color: rgba(0,255,0,0.5);
+            box-shadow: 0 0 20px rgba(0,255,0,0.2);
+        }
+        .toast-error { 
+            background: rgba(255,0,0,0.15); 
+            border-color: rgba(255,0,0,0.5);
+            box-shadow: 0 0 20px rgba(255,0,0,0.2);
+        }
+        .toast-info { 
+            background: rgba(255,165,0,0.15); 
+            border-color: rgba(255,165,0,0.5);
+            box-shadow: 0 0 20px rgba(255,165,0,0.2);
+        }
+
+        .footer-text {
+            margin-top: 30px;
+            color: rgba(255,0,0,0.3);
+            font-size: 0.7em;
+            letter-spacing: 2px;
+        }
+
+        @media (max-width: 500px) {
+            .title { font-size: 1.6em; letter-spacing: 2px; }
+            .logo-img { width: 75px; height: 75px; }
+            .upload-zone { padding: 30px 20px; }
+            .link-row { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-image"></div>
+    <div class="bg-overlay"></div>
+    <div class="noise-overlay"></div>
+
+    <div class="main-content">
+
+        <!-- LOGO -->
+        <div class="logo-container">
+            <img src="https://i.ibb.co/vCfwJshm/logo.jpg" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+        </div>
+
+        <!-- TITLE -->
+        <div class="title-wrapper">
+            <h1 class="title">AHSAN IMAGE HOSTING</h1>
+        </div>
+        <p class="subtitle">Upload • Share • Delete</p>
+
+        <!-- UPLOAD ZONE -->
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">DROP IMAGE HERE</div>
+            <div class="upload-hint">or click to browse • Max 10MB</div>
+        </div>
+        <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
+
+        <!-- AUTO DELETE -->
+        <select class="delete-select" id="deleteTime">
+            <option value="24h">⏰ Auto-Delete: 24 Hours</option>
+            <option value="7d">📅 Auto-Delete: 7 Days</option>
+            <option value="30d">📅 Auto-Delete: 30 Days</option>
+            <option value="forever">♾️ Never Delete</option>
+        </select>
+
+        <!-- UPLOAD BUTTON -->
+        <button class="btn btn-upload" id="uploadBtn" onclick="uploadImage()" disabled>
+            🚀 UPLOAD IMAGE
+        </button>
+
+        <!-- PROGRESS -->
+        <div class="progress-bar" id="progressBar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <!-- RESULT -->
+        <div class="result-area" id="resultArea">
+            <img class="preview-img" id="previewImg" src="" alt="Preview">
+            <div class="result-links" id="resultLinks"></div>
+        </div>
+
+        <div class="footer-text">© 2025 AHSAN IMAGE HOSTING // GLITCH EDITION</div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // FIREBASE
+        const firebaseConfig = {
+            databaseURL: "https://ahsan-url-shortener-default-rtdb.asia-southeast1.firebasedatabase.app/",
+            storageBucket: "ahsan-url-shortener.appspot.com"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const storage = firebase.storage();
+
+        let selectedFile = null;
+        let currentImageUrl = '';
+
+        // FILE SELECT
+        window.handleFileSelect = function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 10 * 1024 * 1024) {
+                    showToast('❌ File too large! Max 10MB', 'error');
+                    return;
+                }
+                selectedFile = file;
+                document.getElementById('uploadBtn').disabled = false;
+                document.getElementById('uploadZone').querySelector('.upload-text').textContent = '✅ ' + file.name;
+                document.getElementById('uploadZone').querySelector('.upload-icon').textContent = '🖼️';
+            }
+        };
+
+        // UPLOAD IMAGE
+        window.uploadImage = async function() {
+            if (!selectedFile) return;
+
+            const btn = document.getElementById('uploadBtn');
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+            const deleteTime = document.getElementById('deleteTime').value;
+
+            btn.disabled = true;
+            btn.textContent = '⏳ UPLOADING...';
+            progressBar.style.display = 'block';
+            progressFill.style.width = '0%';
+
+            try {
+                const code = generateCode(8);
+                const storageRef = storage.ref('images/' + code + '_' + selectedFile.name);
+                
+                const uploadTask = storageRef.put(selectedFile);
+                
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        progressFill.style.width = progress + '%';
+                    },
+                    (error) => {
+                        showToast('❌ Upload failed!', 'error');
+                        btn.disabled = false;
+                        btn.textContent = '🚀 UPLOAD IMAGE';
+                        progressBar.style.display = 'none';
+                    },
+                    async () => {
+                        const downloadUrl = await uploadTask.snapshot.ref.getDownloadURL();
+                        
+                        // Calculate expiry
+                        let expiryDate = null;
+                        const now = new Date();
+                        if (deleteTime === '24h') expiryDate = new Date(now.getTime() + 24*60*60*1000).toISOString();
+                        else if (deleteTime === '7d') expiryDate = new Date(now.getTime() + 7*24*60*60*1000).toISOString();
+                        else if (deleteTime === '30d') expiryDate = new Date(now.getTime() + 30*24*60*60*1000).toISOString();
+
+                        // Save to database
+                        await db.ref('images/' + code).set({
+                            code: code,
+                            url: downloadUrl,
+                            originalName: selectedFile.name,
+                            uploadedAt: new Date().toISOString(),
+                            expiry: expiryDate,
+                            deleteTime: deleteTime,
+                            views: 0
+                        });
+
+                        currentImageUrl = downloadUrl;
+                        
+                        // Show result
+                        displayResult(downloadUrl, code);
+                        
+                        btn.disabled = false;
+                        btn.textContent = '🚀 UPLOAD IMAGE';
+                        progressBar.style.display = 'none';
+                        selectedFile = null;
+                        document.getElementById('fileInput').value = '';
+                        document.getElementById('uploadZone').querySelector('.upload-text').textContent = 'DROP IMAGE HERE';
+                        document.getElementById('uploadZone').querySelector('.upload-icon').textContent = '📁';
+                        
+                        showToast('✅ Image uploaded! Links ready.', 'success');
+                    }
+                );
+            } catch (e) {
+                console.error(e);
+                showToast('❌ Upload error!', 'error');
+                btn.disabled = false;
+                btn.textContent = '🚀 UPLOAD IMAGE';
+                progressBar.style.display = 'none';
+            }
+        };
+
+        // DISPLAY RESULT
+        function displayResult(url, code) {
+            const base = window.location.origin + window.location.pathname.replace('index.html', '');
+            const shortLink = base + '?i=' + code;
+            
+            document.getElementById('previewImg').src = url;
+            
+            document.getElementById('resultLinks').innerHTML = `
+                <div class="link-row">
+                    <span class="link-label">🔗 Direct</span>
+                    <span class="link-value">${url}</span>
+                    <button class="btn-copy-link" onclick="copyText('${url}')">COPY</button>
+                </div>
+                <div class="link-row">
+                    <span class="link-label">⚡ Short</span>
+                    <span class="link-value">${shortLink}</span>
+                    <button class="btn-copy-link" onclick="copyText('${shortLink}')">COPY</button>
+                </div>
+                <div class="link-row">
+                    <span class="link-label">🌐 HTML</span>
+                    <span class="link-value">&lt;img src="${url}"&gt;</span>
+                    <button class="btn-copy-link" onclick="copyText('&lt;img src=&quot;${url}&quot;&gt;')">COPY</button>
+                </div>
+                <div class="link-row">
+                    <span class="link-label">📝 BBCode</span>
+                    <span class="link-value">[img]${url}[/img]</span>
+                    <button class="btn-copy-link" onclick="copyText('[img]${url}[/img]')">COPY</button>
+                </div>
+            `;
+            
+            document.getElementById('resultArea').classList.add('show');
+        }
+
+        // COPY
+        window.copyText = function(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => showToast('📋 Copied!', 'success'));
+            } else {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.cssText = 'position:fixed;left:-9999px;';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                showToast('📋 Copied!', 'success');
+            }
+        };
+
+        // DRAG & DROP
+        const uploadZone = document.getElementById('uploadZone');
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('drag-over');
+        });
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('drag-over');
+        });
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('drag-over');
+            const file = e.dataTransfer.files[0];
+            if (file) {
+                document.getElementById('fileInput').files = e.dataTransfer.files;
+                handleFileSelect({ target: { files: [file] } });
+            }
+        });
+
+        // GENERATE CODE
+        function generateCode(len) {
+            const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < len; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+            return code;
+        }
+
+        // TOAST
+        function showToast(msg, type) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = `toast toast-${type}`;
+            t.style.display = 'block';
+            clearTimeout(t.hide);
+            t.hide = setTimeout(() => t.style.display = 'none', 2500);
+        }
+
+        console.log('🔥 AHSAN IMAGE HOSTING - GLITCH EDITION READY!');
+    </script>
+</body>
+</html>
